@@ -1,0 +1,17 @@
+{
+  "name": "financas",
+  "version": "1.0.0",
+  "main": "dist/applicatiin.js",
+  "scripts": {
+    "dev": "ts-node-dev src/application.ts",
+    "test": "jest"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@types/jest": "^26.0.20",
+    "jest": "^26.6.3",
+    "ts-jest": "^26.5.1",
+    "ts-node-dev": "^1.1.1",
+    "typescript": "^4.1.4"
+  }
+}
