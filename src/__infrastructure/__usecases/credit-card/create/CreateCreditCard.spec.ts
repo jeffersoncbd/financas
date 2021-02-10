@@ -1,4 +1,5 @@
 import { CreateCreditCardUseCase } from '.'
+import { CreditCardsRepository } from '../../_repositories/CreditCard'
 import { CreditCardValidator } from '../../_validators/CreditCard'
 import { CreditCard } from '../../__entities/CreditCard'
 
@@ -11,6 +12,15 @@ function makeCreditCardValidatorStub() {
   return new CreditCardValidatorStub()
 }
 
+function makeCreditCardsRepositoryStub() {
+  class CreditCardsRepositoryStub implements CreditCardsRepository {
+    async create(): Promise<{ id: string }> {
+      return { id: 'valid_id' }
+    }
+  }
+  return new CreditCardsRepositoryStub()
+}
+
 function makeFakeCreditCard(): CreditCard {
   return {
     name: 'any_name',
@@ -21,12 +31,13 @@ function makeFakeCreditCard(): CreditCard {
 
 function makeSut() {
   const validatorStub = makeCreditCardValidatorStub()
-  const sut = new CreateCreditCardUseCase(validatorStub)
-  return { sut, validatorStub }
+  const repositoryStub = makeCreditCardsRepositoryStub()
+  const sut = new CreateCreditCardUseCase(validatorStub, repositoryStub)
+  return { sut, validatorStub, repositoryStub }
 }
 
 describe('CreateCreditCard', () => {
-  test('Deve chamar validador corretamente', async () => {
+  test('Deve validar os dados recebidos', async () => {
     const { sut, validatorStub } = makeSut()
     const validateSpy = jest.spyOn(validatorStub, 'validate')
 
@@ -34,5 +45,15 @@ describe('CreateCreditCard', () => {
     await sut.create(fakeCreditCard)
 
     expect(validateSpy).toHaveBeenCalledWith(fakeCreditCard)
+  })
+
+  test('Deve salvar os dados no repositorio', async () => {
+    const { sut, repositoryStub } = makeSut()
+    const createSpy = jest.spyOn(repositoryStub, 'create')
+
+    const fakeCreditCard = makeFakeCreditCard()
+    await sut.create(fakeCreditCard)
+
+    expect(createSpy).toHaveBeenCalledWith(fakeCreditCard)
   })
 })
