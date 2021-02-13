@@ -14,19 +14,19 @@ function makeCreditCardValidatorStub() {
 
 function makeCreditCardsRepositoryStub() {
   class CreditCardsRepositoryStub implements CreditCardsRepository {
-    async create(): Promise<{ id: string }> {
-      return { id: 'valid_id' }
+    async create(): Promise<void> {
+      return undefined
     }
   }
   return new CreditCardsRepositoryStub()
 }
 
 function makeFakeCreditCard(): CreditCard {
-  return {
+  return new CreditCard({
     name: 'any_name',
     closingDay: 6,
     dueDay: 16
-  }
+  })
 }
 
 function makeSut() {
